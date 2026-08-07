@@ -26,7 +26,7 @@ function Login() {
       const response  = await loginUser(formData);
       setUser(response.data);
      alert("Login Successfull")
-     Navigate("/home")
+     navigate("/home")
        
      } catch (err) {
    
