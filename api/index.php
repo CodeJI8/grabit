@@ -20,6 +20,10 @@ switch ($path) {
         require_once __DIR__ . "/routes/auth.php";
         break;
 
+            case "/products":
+        require_once __DIR__ . "/routes/product.php";
+        break;
+
     default:
         jsonResponse(false, "Route not found.", null, 404);
         break;

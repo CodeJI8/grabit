@@ -3,9 +3,15 @@
 function isEmpty(...$fields)
 {
     foreach ($fields as $field) {
-        if (empty(trim($field))) {
+
+        if ($field === null) {
             return true;
         }
+
+        if (is_string($field) && trim($field) === "") {
+            return true;
+        }
+
     }
 
     return false;
