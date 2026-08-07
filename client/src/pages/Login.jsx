@@ -69,9 +69,9 @@ function Login() {
             />
           </div>
 
-          <Link type="submit">
+          <button type="submit">
             Login
-          </Link>
+          </button>
         </form>
       </div>
     </div>
