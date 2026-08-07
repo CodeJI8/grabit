@@ -18,7 +18,7 @@ class AuthController
         $data = json_decode(file_get_contents("php://input"), true);
 
         if (!$data) {
-              jsonResponse(false, "Invalid request data.", null, 400);
+            jsonResponse(false, "Invalid request data.", null, 400);
         }
 
         $name = $data["name"] ?? "";
@@ -27,57 +27,59 @@ class AuthController
         $role = $data["role"] ?? "";
         $password = $data["password"] ?? "";
 
-  if (isEmpty($name, $phone, $roleId, $role, $password)) {
-    jsonResponse(false, "All fields are required.", null, 400);
-}
+        if (isEmpty($name, $phone, $roleId, $role, $password)) {
+            jsonResponse(false, "All fields are required.", null, 400);
+        }
 
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        $created = $this->user->createUser(
-            $name,
-            $phone,
-            $roleId,
-            $role,
-            $hashedPassword
-        );
+        try {
+            $created = $this->user->createUser(
+                $name,
+                $phone,
+                $roleId,
+                $role,
+                $hashedPassword
+            );
+        } catch (PDOException $e) {
 
-        if ($created) {
-            jsonResponse(true, "User registered successfully.");
+            if ($e->errorInfo[1] === 1062) {
+                jsonResponse(false, "User already exists", null, 409);
+            }
+
+            if ($created) {
+                jsonResponse(true, "User registered successfully.");
+            }
+
+            jsonResponse(false, "Registration failed", null, 500);
         }
-
-        jsonResponse(false, "Registration failed.");
     }
 
 
 
 
-public function login(){
+    public function login()
+    {
 
-    $data = json_decode(file_get_contents("php://input"), true);
-    if (!$data) {
-    jsonResponse(false, "Invalid request data.", null, 400);
-}
+        $data = json_decode(file_get_contents("php://input"), true);
+        if (!$data) {
+            jsonResponse(false, "Invalid request data.", null, 400);
+        }
 
-    $phone = $data["phone"] ?? "";
-    $password = $data["password"] ?? "";
-    $user = $this->user->loginUser($phone);
+        $phone = $data["phone"] ?? "";
+        $password = $data["password"] ?? "";
+        $user = $this->user->loginUser($phone);
 
-    if (!$user) {
-    jsonResponse(false, "User not found.", null, 404);
-}
+        if (!$user) {
+            jsonResponse(false, "User not found.", null, 404);
+        }
 
         if (!password_verify($password, $user["password"])) {
-    jsonResponse(false, "Invalid password.", null, 401);
-}
+            jsonResponse(false, "Invalid password.", null, 401);
+        }
 
-    unset($user["password"]);
+        unset($user["password"]);
 
-    jsonResponse(true, "Login successful.", $user);
-
-}
-
-
-
-
-
+        jsonResponse(true, "Login successful.", $user);
+    }
 }

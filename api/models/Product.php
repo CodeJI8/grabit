@@ -6,7 +6,7 @@ class Product extends BaseModel{
 
   protected $table = "products";
 
-  public function createProduct($ownerID , $title , $desc , $price , $image )
+  public function createProduct($ownerID , $title , $desc , $price , $image)
       {
         $query = "INSERT INTO {$this->table}
                     (owner_id, title, description, price, image)
@@ -23,6 +23,18 @@ class Product extends BaseModel{
             ":image"      => $image
         ]);
     }
+
+
+
+    public function getAll()
+{
+    $query = "SELECT * FROM {$this->table}";
+
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
     
 

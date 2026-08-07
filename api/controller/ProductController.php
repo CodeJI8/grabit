@@ -39,4 +39,17 @@ class ProductController
 
         jsonResponse(false, "Failed to list product", null, 500);
     }
+
+
+
+   public function getAllProducts()
+{
+    $products = $this->product->getAll();
+
+    if ($products) {
+        jsonResponse(true, "Products retrieved successfully", $products);
+    }
+
+    jsonResponse(false, "No products found", [], 404);
+}
 }

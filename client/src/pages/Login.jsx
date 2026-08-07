@@ -1,10 +1,14 @@
 import { useState } from "react";
 import "../styles/Login.css";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { loginUser } from "../api/auth.js";
+import { useUser } from "../context/UserContext";
 
 function Login() {
+  const navigate = useNavigate();
+  const { setUser } = useUser();
   const [formData, setFormData] = useState({
-    email: "",
+    phone: "",
     password: "",
   });
 
@@ -19,11 +23,10 @@ function Login() {
     e.preventDefault();
     try {
    
-      await loginUser(formData);
+      const response  = await loginUser(formData);
+      setUser(response.data);
      alert("Login Successfull")
-
-     
-   
+     Navigate("/home")
        
      } catch (err) {
    
@@ -45,12 +48,12 @@ function Login() {
 
         <form onSubmit={handleSubmit}>
           <div>
-            <label>Email</label>
+            <label>Number</label>
             <input
-              type="email"
-              name="email"
-              placeholder="Enter email"
-              value={formData.email}
+              type="text"
+              name="phone"
+              placeholder="Enter Number"
+              value={formData.phone}
               onChange={handleChange}
             />
           </div>
@@ -66,9 +69,9 @@ function Login() {
             />
           </div>
 
-          <button type="submit">
+          <Link type="submit">
             Login
-          </button>
+          </Link>
         </form>
       </div>
     </div>
