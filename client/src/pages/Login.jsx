@@ -24,6 +24,7 @@ function Login() {
     try {
    
       const response  = await loginUser(formData);
+      console.log(response.data);
       setUser(response.data);
      alert("Login Successfull")
      navigate("/home")

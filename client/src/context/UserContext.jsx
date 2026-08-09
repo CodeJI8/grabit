@@ -7,7 +7,16 @@ export const UserProvider = ({ children }) => {
     const [user, setUserState] = useState(() => {
         const savedUser = localStorage.getItem("user");
 
-        return savedUser ? JSON.parse(savedUser) : null;
+        if (!savedUser || savedUser === "undefined") {
+            return null;
+        }
+
+        try {
+            return JSON.parse(savedUser);
+        } catch (error) {
+            localStorage.removeItem("user");
+            return null;
+        }
     });
 
     const setUser = (userData) => {

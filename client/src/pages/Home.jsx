@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import productApi from "../api/product";
 import { useUser } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 
 function Home() {
 
     const {user} = useUser();
-   
+   const navigate = useNavigate();
     const [products, setProducts] = useState([]);
     const fetchProducts = async()=>{
 
@@ -38,6 +39,10 @@ function Home() {
      return (
         <div>
             <h1>Welcome, {user?.name}</h1>
+
+            <button onClick={() => navigate("/create-product")}>
+    + List Product
+         </button>
 
             <h2>Available Products</h2>
 
