@@ -3,7 +3,7 @@
 require_once __DIR__ . "/../models/Product.php";
 require_once __DIR__ . "/../helper/response.php";
 require_once __DIR__ . "/../helper/validator.php";
-
+require_once __DIR__ . "/../helper/image.php";
 class ProductController
 {
     private $product;
@@ -16,17 +16,17 @@ class ProductController
     public function create()
     {
 
-    $data = json_decode(file_get_contents("php://input"), true);
 
-if (!$data) {
-    jsonResponse(false, "Invalid request data.", null, 400);
+       $ownerId = $_POST["owner_id"] ?? "";
+$title = trim($_POST["title"] ?? "");
+$description = trim($_POST["description"] ?? "");
+$price = $_POST["price"] ?? "";
+$image = $_FILES["image"] ?? null;
+$imagePath = uploadProductImage($image);
+
+if ($image && !$imagePath) {
+    jsonResponse(false, "Invalid image upload", null, 400);
 }
-       $ownerId = $data["owner_id"] ?? "";
-$title = trim($data["title"] ?? "");
-$description = trim($data["description"] ?? "");
-$price = $data["price"] ?? "";
-$image = $data["image"] ?? "";
-
         if (isEmpty($ownerId, $title, $price)) {
             jsonResponse(false, "Required fields are missing", null, 400);
         }
@@ -36,7 +36,7 @@ $image = $data["image"] ?? "";
             $title,
             $description,
             $price,
-            $image
+            $imagePath
         );
 
         if ($created) {

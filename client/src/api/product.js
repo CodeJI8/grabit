@@ -13,15 +13,19 @@ const getAllProducts = async()=>{
 
 
 
-const createProduct = async(productData)=>{ 
+const createProduct = async (productData) => {
+    const formData = new FormData();
 
-    const response  = await api.post("/products", productData);
+    formData.append("owner_id", productData.owner_id);
+    formData.append("title", productData.title);
+    formData.append("description", productData.description);
+    formData.append("price", productData.price);
+    formData.append("image", productData.image);
+
+    const response = await api.post("/products", formData);
+
     return response.data;
-
-
-
-
-}
+};
 
 export default {
     getAllProducts,
