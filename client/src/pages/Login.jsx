@@ -19,26 +19,25 @@ function Login() {
     }));
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-   
-      const response  = await loginUser(formData);
-      console.log(response.data);
-      setUser(response.data);
-     alert("Login Successfull")
-     navigate("/home")
-       
-     } catch (err) {
-   
-       console.log(err)
-         alert(err)
-       
-     }
+      const response = await loginUser(formData);
+      const loggedInUser = response?.data ?? response;
 
- 
+      if (!response?.success || !loggedInUser) {
+        alert(response?.message || "Login failed");
+        return;
+      }
 
-    // login API later
+      setUser(loggedInUser);
+      alert("Login Successful");
+      navigate("/home");
+    } catch (err) {
+      console.log(err);
+      alert(err?.response?.data?.message || "Login failed");
+    }
   };
 
   return (

@@ -25,8 +25,13 @@ function CreateProduct() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!user?.id) {
+      alert("Please log in before listing a product.");
+      navigate("/login");
+      return;
+    }
+
     const productData = {
-      
       owner_id: user.id,
       ...formData,
     };
@@ -36,15 +41,18 @@ function CreateProduct() {
     try {
       const response = await productApi.createProduct(productData);
 
-      console.log("Server response:", response.data);
+      console.log("Server response:", response?.data || response);
 
-      if (response.success) {
-        alert(response.message);
+      if (response?.success) {
+        alert(response.message || "Product listed successfully!");
         navigate("/home");
+      } else {
+        alert(response?.message || "Failed to list product.");
       }
     } catch (error) {
       console.log("API Error:", error);
       console.log("Backend Response:", error.response?.data);
+      alert(error.response?.data?.message || "Something went wrong while listing the product.");
     }
   };
 

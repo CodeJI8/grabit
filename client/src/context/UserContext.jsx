@@ -20,8 +20,16 @@ export const UserProvider = ({ children }) => {
     });
 
     const setUser = (userData) => {
-        setUserState(userData);
-        localStorage.setItem("user", JSON.stringify(userData));
+        const normalizedUser = userData?.data ?? userData;
+
+        if (!normalizedUser) {
+            setUserState(null);
+            localStorage.removeItem("user");
+            return;
+        }
+
+        setUserState(normalizedUser);
+        localStorage.setItem("user", JSON.stringify(normalizedUser));
     };
 
     const logout = () => {

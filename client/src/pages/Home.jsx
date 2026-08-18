@@ -7,21 +7,24 @@ import "../styles/Home.css";
 
 
 function Home() {
-
-    const {user, setUser} = useUser();
-   const navigate = useNavigate();
+    const { user, setUser } = useUser();
+    const navigate = useNavigate();
+    const [products, setProducts] = useState([]);
     const [selectedProduct, setSelectedProduct] = useState(null);
 
-    const fetchProducts = async()=>{
+    const fetchProducts = async () => {
         try {
-            const response  = await productApi.getAllProducts();
-            if (response.success) {
-                setProducts(response.data);
+            const response = await productApi.getAllProducts();
+            if (response?.success) {
+                setProducts(response.data || []);
+            } else {
+                setProducts([]);
             }
         } catch (error) {
-            console.log(error)
+            console.log(error);
+            setProducts([]);
         }
-    }
+    };
 
     useEffect(() => {
         fetchProducts();
@@ -72,56 +75,57 @@ function Home() {
                 {products.map((p) => {
                     const isAvailable = p.status !== 'borrowed';
                     return (
-                    <div className="product-card" key={p.id}>
-                        {p.image ? (
-                            <img
-                                src={`http://localhost/grabit/api/${p.image}`}
-                                alt={p.title}
-                                className="product-image"
-                            />
-                        ) : (
-                            <div className="no-image">
-                                No image
-                            </div>
-                        )}
+                        <div className="product-card" key={p.id}>
+                            {p.image ? (
+                                <img
+                                    src={`http://localhost/grabit/api/${p.image}`}
+                                    alt={p.title}
+                                    className="product-image"
+                                />
+                            ) : (
+                                <div className="no-image">
+                                    No image
+                                </div>
+                            )}
 
-                        <div className="product-content">
-                            <h3>{p.title}</h3>
-                            <p className="product-description">
-                                {p.description}
-                            </p>
-                            <p className="product-owner">
-                                Owner: <strong>{p.owner_name || "N/A"}</strong>
-                            </p>
-                            
-                            <p className="product-status" style={{ color: isAvailable ? 'green' : 'red', fontWeight: 'bold', margin: '5px 0' }}>
-                                {isAvailable ? "Available" : "Already someone's borrowing"}
-                            </p>
+                            <div className="product-content">
+                                <h3>{p.title}</h3>
+                                <p className="product-description">
+                                    {p.description}
+                                </p>
+                                <p className="product-owner">
+                                    Owner: <strong>{p.owner_name || "N/A"}</strong>
+                                </p>
 
-                            <div className="product-footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
-                                <span className="product-price">
-                                    ৳ {p.price}
-                                </span>
-                                <button 
-                                    className="borrow-btn" 
-                                    disabled={!isAvailable}
-                                    onClick={() => setSelectedProduct(p)}
-                                    style={{
-                                        backgroundColor: isAvailable ? '#4CAF50' : '#ccc',
-                                        color: 'white',
-                                        border: 'none',
-                                        padding: '8px 16px',
-                                        borderRadius: '4px',
-                                        cursor: isAvailable ? 'pointer' : 'not-allowed',
-                                        fontWeight: 'bold'
-                                    }}
-                                >
-                                    Borrow
-                                </button>
+                                <p className="product-status" style={{ color: isAvailable ? 'green' : 'red', fontWeight: 'bold', margin: '5px 0' }}>
+                                    {isAvailable ? "Available" : "Already someone's borrowing"}
+                                </p>
+
+                                <div className="product-footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
+                                    <span className="product-price">
+                                        ৳ {p.price}
+                                    </span>
+                                    <button
+                                        className="borrow-btn"
+                                        disabled={!isAvailable}
+                                        onClick={() => setSelectedProduct(p)}
+                                        style={{
+                                            backgroundColor: isAvailable ? '#4CAF50' : '#ccc',
+                                            color: 'white',
+                                            border: 'none',
+                                            padding: '8px 16px',
+                                            borderRadius: '4px',
+                                            cursor: isAvailable ? 'pointer' : 'not-allowed',
+                                            fontWeight: 'bold'
+                                        }}
+                                    >
+                                        Borrow
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )})}
+                    );
+                })}
             </div>
 
             {selectedProduct && (
