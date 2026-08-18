@@ -26,6 +26,7 @@ function CreateProduct() {
     e.preventDefault();
 
     const productData = {
+      
       owner_id: user.id,
       ...formData,
     };

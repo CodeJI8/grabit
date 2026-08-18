@@ -110,7 +110,7 @@ function Register() {
 
         <p>
           Already have an account?{" "}
-          <Link to="/login">Login</Link>
+          <Link to="/login">Log in</Link>
         </p>
       </div>
     </div>

@@ -28,7 +28,9 @@ class Product extends BaseModel{
 
     public function getAll()
 {
-    $query = "SELECT * FROM {$this->table}";
+    $query = "SELECT products.*, users.name AS owner_name, users.phone AS owner_phone
+FROM products
+JOIN users ON products.owner_id = users.id";
 
     $stmt = $this->conn->prepare($query);
     $stmt->execute();
